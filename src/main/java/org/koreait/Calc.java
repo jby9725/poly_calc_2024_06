@@ -3,6 +3,9 @@ package org.koreait;
 // 추가 조건
 // 연산자 사이는 공백으로 구분한다.
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Calc {
     public static int run(String exp) {
         int answer = 0;
@@ -20,18 +23,26 @@ public class Calc {
             bits = exp.split(" \\- ");
         }
 
-        int a = Integer.parseInt(bits[0]);
-        int b = Integer.parseInt(bits[1]);
+        // 파싱되고 남은 숫자들을 저장할 리스트 numbers
+        List<Integer> numbers = new ArrayList<>();
 
-        if (needToPlus) {
-            answer = a + b;
-            return answer;
+        for (String bit : bits) {
+            numbers.add(Integer.parseInt(bit));
+        }
+        answer = numbers.get(0);
+        // 아래 for문을 돌 때, 가장 처음의 값의 부호가 마이너스인 경우로 무조건 상정하게 되기 때문에 이를 방지하기 위해 0번째 값을 미리 가지고 있는다.
 
-        } else if (needToMinus) {
-            answer = a - b;
-            return answer;
+        for (int i = 1; i < numbers.size(); i++) {
+            if (needToPlus) {
+                answer = answer + numbers.get(i);
+            }
+            else if (needToMinus) {
+                answer = answer - numbers.get(i);
+            }
         }
 
-        throw new RuntimeException("해석 불가 : 올바른 계산식이 아닙니다.");
+        return answer;
+//        throw new RuntimeException("해석 불가 : 올바른 계산식이 아닙니다.");
+
     }
 }
