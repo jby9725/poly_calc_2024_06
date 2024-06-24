@@ -25,29 +25,41 @@ public class CalcTests {
     void test3() {
         assertThat(Calc.run("50 - 30")).isEqualTo(20);
     }
-    // 다항 더하기
+    // 삼항 더하기
     @Test
     @DisplayName("10 + 20 + 30 == 60")
     void test4() {
         assertThat(Calc.run("10 + 20 + 30")).isEqualTo(60);
     }
-    // 다항 빼기
+    // 삼항 빼기
     @Test
     @DisplayName("50 - 10 - 20 == 20")
     void test5() {
         assertThat(Calc.run("50 - 10 - 20")).isEqualTo(20);
     }
-    // 다항 빼기 음수 포함
+    // 삼항 빼기 음수 포함
     @Test
     @DisplayName("-50 - 10 - 20 == -80")
     void test6() {
         assertThat(Calc.run("-50 - 10 - 20")).isEqualTo(-80);
     }
-    // 다항 혼합 연산
+    // 삼항 혼합 연산
+    @Test
+    @DisplayName("10 - 20 + 30 == 20")
+    void test7() {
+        assertThat(Calc.run("10 - 20 + 30")).isEqualTo(20);
+    }
+    // 삼항 혼합 연산2
     @Test
     @DisplayName("-50 + 100 - 20 == 30")
-    void test7() {
+    void test8() {
         assertThat(Calc.run("-50 + 100 - 20")).isEqualTo(30);
+    }
+    // 다항 혼합 연산
+    @Test
+    @DisplayName("10 - 10 - 10 - 10 + 10 + 10 - 10 == -10")
+    void test9() {
+        assertThat(Calc.run("10 - 10 - 10 - 10 + 10 + 10 - 10")).isEqualTo(-10);
     }
 
 
