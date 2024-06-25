@@ -87,14 +87,26 @@ public class CalcTests {
     }
     // 곱셈 더하기 혼합연산 2
     @Test
-    @DisplayName("20 + 10 + 5 * 2 == 40")
+    @DisplayName("20 + 15 + 5 * 2 == 45")
     void test14() {
-        assertThat(Calc.run("20 + 10 + 5 * 2")).isEqualTo(40);
+        assertThat(Calc.run("20 + 15 + 5 * 2")).isEqualTo(45);
     }
     // 곱셈 더하기 혼합연산 3
     @Test
     @DisplayName("20 - 10 + 5 * 2 == 20")
     void test15() {
         assertThat(Calc.run("20 - 10 + 5 * 2")).isEqualTo(20);
+    }
+    // 곱셈 더하기 혼합연산 4
+    @Test
+    @DisplayName("10 * 20 + 10 + 5 * 2 == 220")
+    void test16() {
+        assertThat(Calc.run("10 * 20 + 10 + 5 * 2")).isEqualTo(220);
+    }
+    // 괄호연산
+    @Test
+    @DisplayName("(10 + 20) == 30")
+    void test17() {
+        assertThat(Calc.run("(10 + 20)")).isEqualTo(30);
     }
 }
