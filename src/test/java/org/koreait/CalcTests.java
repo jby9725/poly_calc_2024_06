@@ -61,7 +61,12 @@ public class CalcTests {
     void test9() {
         assertThat(Calc.run("10 - 10 - 10 - 10 + 10 + 10 - 10")).isEqualTo(-10);
     }
-
+    // 삼항 곱셈 연산
+    @Test
+    @DisplayName("10 * 10 * 10 == 1000")
+    void test10() {
+        assertThat(Calc.run("10 * 10 * 10")).isEqualTo(1000);
+    }
 
 
 }
