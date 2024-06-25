@@ -109,4 +109,28 @@ public class CalcTests {
     void test17() {
         assertThat(Calc.run("(10 + 20)")).isEqualTo(30);
     }
+    // 괄호연산
+    @Test
+    @DisplayName("((10 + 20)) == 30")
+    void test18() {
+        assertThat(Calc.run("((10 + 20))")).isEqualTo(30);
+    }
+    // 괄호연산
+    @Test
+    @DisplayName("(((10 + 20))) == 30")
+    void test19() {
+        assertThat(Calc.run("(((10 + 20)))")).isEqualTo(30);
+    }
+    // 괄호연산2
+    @Test
+    @DisplayName("(20 + 20) + 20 == 60")
+    void test20() {
+        assertThat(Calc.run("(20 + 20) + 20")).isEqualTo(60);
+    }
+    // 괄호연산3
+    @Test
+    @DisplayName("(20 - 20) * 20 == 0")
+    void test21() {
+        assertThat(Calc.run("(20 - 20) * 20")).isEqualTo(0);
+    }
 }
