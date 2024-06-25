@@ -67,6 +67,34 @@ public class CalcTests {
     void test10() {
         assertThat(Calc.run("10 * 10 * 10")).isEqualTo(1000);
     }
-
-
+    // 삼항 곱셈 연산
+    @Test
+    @DisplayName("10 * -15 * 10 == -1500")
+    void test11() {
+        assertThat(Calc.run("10 * -15 * 10")).isEqualTo(-1500);
+    }
+    // 삼항 곱셈 연산
+    @Test
+    @DisplayName("10 * 2 * -3 == -60")
+    void test12() {
+        assertThat(Calc.run("10 * 2 * -3")).isEqualTo(-60);
+    }
+    // 곱셈 더하기 혼합연산
+    @Test
+    @DisplayName("10 + 5 * 2 == 20")
+    void test13() {
+        assertThat(Calc.run("10 + 5 * 2")).isEqualTo(20);
+    }
+    // 곱셈 더하기 혼합연산 2
+    @Test
+    @DisplayName("20 + 10 + 5 * 2 == 40")
+    void test14() {
+        assertThat(Calc.run("20 + 10 + 5 * 2")).isEqualTo(40);
+    }
+    // 곱셈 더하기 혼합연산 3
+    @Test
+    @DisplayName("20 - 10 + 5 * 2 == 20")
+    void test15() {
+        assertThat(Calc.run("20 - 10 + 5 * 2")).isEqualTo(20);
+    }
 }
