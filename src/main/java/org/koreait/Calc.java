@@ -12,15 +12,8 @@ public class Calc {
     public static int run(String exp) {
         int answer = 0;
 
-//        System.out.println(exp);
         // 괄호 제거
-        stripOuterBrackets(exp);
-//        while (true) {
-//            if (exp.contains("("))
-//                exp = stripOuterBrackets(exp);
-//            else
-//                break;
-//        }
+        exp = stripOuterBrackets(exp);
 
         System.out.println("EXP: " + exp);
 
@@ -82,11 +75,17 @@ public class Calc {
 
     }
 
+    // 바깥 괄호 삭제 메소드
     public static String stripOuterBrackets(String exp) {
-        if (exp.charAt(0) == '(' && exp.charAt(exp.length() - 1) == ')') {
-            exp = exp.substring(1, exp.length() - 1);
-            System.out.println("exp: " + exp);
+        // 바깥쪽의 괄호가 몇 겹인지.
+        int outerBracketsCount = 0;
+
+        while (exp.charAt(outerBracketsCount) == '(' && exp.charAt(exp.length() - 1 - outerBracketsCount) == ')') {
+            outerBracketsCount++;
         }
-        return exp;
+
+        if(outerBracketsCount == 0) return exp;
+
+        return exp.substring(outerBracketsCount, exp.length() - outerBracketsCount);
     }
 }
