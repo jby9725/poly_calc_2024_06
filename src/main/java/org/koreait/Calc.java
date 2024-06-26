@@ -59,11 +59,19 @@ public class Calc {
                 }
             }
             String firstExp = exp.substring(0, splitPointIndex + 1); // '('부터 ')' 까지
-            System.out.println("firstExp: " + firstExp);
+            // 괄호가 뒤에 올 경우 firstExp에 들어가는 값이
+//            System.out.println("firstExp: " + firstExp);
             String secondExp = exp.substring(splitPointIndex + 4); // 괄호 다음의 연산자 뒤에 있는 숫자부터 끝까지
-            System.out.println("secondExp: " + secondExp);
-            return Calc.run(firstExp) + Calc.run(secondExp);
+//            System.out.println("secondExp: " + secondExp);
 
+            String operator = exp.substring(splitPointIndex + 2, splitPointIndex + 3);
+//            System.out.println("사이의 연산자 : " + operator);
+
+            if(operator.equals("+")) {
+                return Calc.run(firstExp) + Calc.run(secondExp);
+            }else if(operator.equals("*")) {
+                return Calc.run(firstExp) * Calc.run(secondExp);
+            }
         }
         else if (needToCompound) {
             bits = exp.split(" \\+ ");
@@ -90,6 +98,8 @@ public class Calc {
         // 파싱되고 남은 숫자들을 저장할 리스트 numbers
         List<Integer> numbers = new ArrayList<>();
 
+        // System.out.println("bits: " + Arrays.toString(bits));
+
         for (int i = 0; i < bits.length; i++) {
             System.out.println("bits[" + i + "] : " + bits[i]);
             numbers.add(Integer.parseInt(bits[i]));
@@ -103,7 +113,7 @@ public class Calc {
             }
         }
 
-//        System.out.println("answer: " + answer);
+        // System.out.println("answer: " + answer);
         return answer;
         // throw new RuntimeException("해석 불가 : 올바른 계산식이 아닙니다.");
 
