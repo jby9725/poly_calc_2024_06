@@ -12,7 +12,9 @@ public class Calc {
     public static int run(String exp) {
         int answer = 0;
 
-        // 괄호 제거
+        exp = exp.trim(); // 양 옆의 쓸데없는 공백 제거하기
+
+        // 바깥 괄호 제거
         exp = stripOuterBrackets(exp);
 
         System.out.println("EXP: " + exp);
@@ -30,10 +32,40 @@ public class Calc {
         boolean needToMultiply = exp.contains("*");
         // 혼합연산이 필요한가?
         boolean needToCompound = needToMultiply && needToPlus;
+        // 괄호가 여전히 들어있나요?
+        boolean hasBrackets = exp.contains(")") || exp.contains("(");
 
         String[] bits = null;
 
-        if (needToCompound) {
+        // 여전히 식에 괄호가 있다면
+        if(hasBrackets) {
+            int bracketsCount = 0;
+            // 괄호 수를 세고 여는 괄호에 맞춰 닫는 괄호가 모두 닫혔을 때를 세기 위한 Count.
+            int splitPointIndex = -1;
+            // 문자열에서 자를 인덱스값 찾기 위해.
+            // (10 + 10) + 20 일 때
+            // )와 20 사이에 있는 +를 기준으로 잘라야 한다. 이 잘라야 하는 곳을 저장하기 위한 splitPointIndex.
+
+            for (int i = 0; i < exp.length(); i++) {
+                if (exp.charAt(i) == '(') {
+                    bracketsCount++;
+                } else if (exp.charAt(i) == ')') {
+                    bracketsCount--;
+                }
+                // 여는 괄호와 닫는 괄호가 쌍을 다 이뤘을 때.
+                if (bracketsCount == 0) {
+                    splitPointIndex = i; // 닫는 괄호의 위치
+                    break;
+                }
+            }
+            String firstExp = exp.substring(0, splitPointIndex + 1); // '('부터 ')' 까지
+            System.out.println("firstExp: " + firstExp);
+            String secondExp = exp.substring(splitPointIndex + 4); // 괄호 다음의 연산자 뒤에 있는 숫자부터 끝까지
+            System.out.println("secondExp: " + secondExp);
+            return Calc.run(firstExp) + Calc.run(secondExp);
+
+        }
+        else if (needToCompound) {
             bits = exp.split(" \\+ ");
 
             // new... 잘 알아봅시다. // "20 + 10 + 5 * 2 == 40"
@@ -45,6 +77,8 @@ public class Calc {
 
             return run(newExp);
         }
+
+
         if (needToPlus) {
             bits = exp.split(" \\+ "); // 더하기는 역슬래시 2개 넣은 다음 써야한다. 모르면? 검색 : java split plus
         } else if (needToMultiply) {
@@ -56,9 +90,9 @@ public class Calc {
         // 파싱되고 남은 숫자들을 저장할 리스트 numbers
         List<Integer> numbers = new ArrayList<>();
 
-        for (String bit : bits) {
-//            System.out.println(bit);
-            numbers.add(Integer.parseInt(bit));
+        for (int i = 0; i < bits.length; i++) {
+            System.out.println("bits[" + i + "] : " + bits[i]);
+            numbers.add(Integer.parseInt(bits[i]));
         }
 
         for (int number : numbers) {
@@ -84,7 +118,7 @@ public class Calc {
             outerBracketsCount++;
         }
 
-        if(outerBracketsCount == 0) return exp;
+        if (outerBracketsCount == 0) return exp;
 
         return exp.substring(outerBracketsCount, exp.length() - outerBracketsCount);
     }

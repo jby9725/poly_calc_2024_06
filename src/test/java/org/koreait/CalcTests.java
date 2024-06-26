@@ -127,10 +127,17 @@ public class CalcTests {
     void test20() {
         assertThat(Calc.run("(20 + 20) + 20")).isEqualTo(60);
     }
+    // 괄호연산2
+    @Test
+    @DisplayName("((20 + 20)) + 20 == 60")
+    void test21() {
+        assertThat(Calc.run("((20 + 20)) + 20")).isEqualTo(60);
+    }
     // 괄호연산3
     @Test
-    @DisplayName("(20 - 20) * 20 == 0")
-    void test21() {
-        assertThat(Calc.run("(20 - 20) * 20")).isEqualTo(0);
+    @DisplayName("(10 + 20) * 3 == 90")
+    void test22() {
+        assertThat(Calc.run("(10 + 20) * 3")).isEqualTo(90);
     }
+
 }
