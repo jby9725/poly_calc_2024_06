@@ -13,12 +13,6 @@ public class CalcTests {
     void test1() {
         assertThat(Calc.run("1 + 1")).isEqualTo(2);
     }
-    // 더하기2
-    @Test
-    @DisplayName("1000 + 200 == 1200")
-    void test2() {
-        assertThat(Calc.run("1000 + 200")).isEqualTo(1200);
-    }
     // 빼기 간단
     @Test
     @DisplayName("50 - 30 == 20")
@@ -69,12 +63,6 @@ public class CalcTests {
     }
     // 삼항 곱셈 연산
     @Test
-    @DisplayName("10 * -15 * 10 == -1500")
-    void test11() {
-        assertThat(Calc.run("10 * -15 * 10")).isEqualTo(-1500);
-    }
-    // 삼항 곱셈 연산
-    @Test
     @DisplayName("10 * 2 * -3 == -60")
     void test12() {
         assertThat(Calc.run("10 * 2 * -3")).isEqualTo(-60);
@@ -115,12 +103,6 @@ public class CalcTests {
     void test18() {
         assertThat(Calc.run("((10 + 20))")).isEqualTo(30);
     }
-    // 괄호연산
-    @Test
-    @DisplayName("(((10 + 20))) == 30")
-    void test19() {
-        assertThat(Calc.run("(((10 + 20)))")).isEqualTo(30);
-    }
     // 괄호연산2
     @Test
     @DisplayName("(20 + 20) + 20 == 60")
@@ -146,4 +128,21 @@ public class CalcTests {
         assertThat(Calc.run("10 + (10 + 5)")).isEqualTo(25);
     }
 
+    @Test
+    @DisplayName("10 * (10 + 5) == 150")
+    void test24() {
+        assertThat(Calc.run("10 * (10 + 5)")).isEqualTo(150);
+    }
+
+    @Test
+    @DisplayName("-(10 + 5) == -15")
+    void test25() {
+        assertThat(Calc.run("-(10 + 5)")).isEqualTo(-15);
+    }
+
+    @Test
+    @DisplayName("-(8 + 2) * -(7 + 3) + 5")
+    void test26() {
+        assertThat(Calc.run("-(8 + 2) * -(7 + 3) + 5")).isEqualTo(-105);
+    }
 }

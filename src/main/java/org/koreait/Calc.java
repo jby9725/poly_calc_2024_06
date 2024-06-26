@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Calc {
+
+    public static boolean debug = false; // 디버그 하는 중...
+    public static int runCallCount = 0; // run 메소드 호출 횟수...
+
     public static int run(String exp) {
+        runCallCount++;
         int answer = 0;
 
         exp = exp.trim(); // 양 옆의 쓸데없는 공백 제거하기
@@ -17,7 +22,9 @@ public class Calc {
         // 바깥 괄호 제거
         exp = stripOuterBrackets(exp);
 
-        System.out.println("EXP: " + exp);
+        if (debug) {
+            System.out.printf("EXP(%d): `%s`\n", runCallCount, exp);
+        }
 
         if (!exp.contains(" ")) { // 숫자만 들어왔어요.
             return Integer.parseInt(exp);
@@ -27,9 +34,9 @@ public class Calc {
         exp = exp.replaceAll("- ", "+ -");
 
         boolean needToPlus = exp.contains("+");
-        // boolean needToMinus = exp.contains("-");
-        // 이제 필요가 없어졌다. 빼기를 '음수를 더한다'라는 개념으로 변경했기 때문에.
+        // boolean needToMinus = exp.contains("-"); // 이제 필요가 없어졌다. 빼기를 '음수를 더한다'라는 개념으로 변경했기 때문에.
         boolean needToMultiply = exp.contains("*");
+
         // 혼합연산이 필요한가?
         boolean needToCompound = needToMultiply && needToPlus;
         // 괄호가 여전히 들어있나요?
@@ -38,42 +45,23 @@ public class Calc {
         String[] bits = null;
 
         // 여전히 식에 괄호가 있다면
-        if(hasBrackets) {
-            int bracketsCount = 0;
-            // 괄호 수를 세고 여는 괄호에 맞춰 닫는 괄호가 모두 닫혔을 때를 세기 위한 Count.
-            int splitPointIndex = -1;
-            // 문자열에서 자를 인덱스값 찾기 위해.
-            // (10 + 10) + 20 일 때
-            // )와 20 사이에 있는 +를 기준으로 잘라야 한다. 이 잘라야 하는 곳을 저장하기 위한 splitPointIndex.
+        if (hasBrackets) {
 
-            for (int i = 0; i < exp.length(); i++) {
-                if (exp.charAt(i) == '(') {
-                    bracketsCount++;
-                } else if (exp.charAt(i) == ')') {
-                    bracketsCount--;
-                }
-                // 여는 괄호와 닫는 괄호가 쌍을 다 이뤘을 때.
-                if (bracketsCount == 0) {
-                    splitPointIndex = i; // 닫는 괄호의 위치
-                    break;
-                }
-            }
-            String firstExp = exp.substring(0, splitPointIndex + 1); // '('부터 ')' 까지
-            // 괄호가 뒤에 올 경우 firstExp에 들어가는 값이
-//            System.out.println("firstExp: " + firstExp);
-            String secondExp = exp.substring(splitPointIndex + 4); // 괄호 다음의 연산자 뒤에 있는 숫자부터 끝까지
-//            System.out.println("secondExp: " + secondExp);
+            // 문자열을 자를 기준으로 삼을 인덱스값
+            int splitPointIndex = findSplitPointIndex(exp);
 
-            String operator = exp.substring(splitPointIndex + 2, splitPointIndex + 3);
-//            System.out.println("사이의 연산자 : " + operator);
+            // 자른 문자열. 이 문자열들은 괄호로 싸여있거나, 싸여있지 않다.
+            String firstExp = exp.substring(0, splitPointIndex);
+            String secondExp = exp.substring(splitPointIndex + 1);
 
-            if(operator.equals("+")) {
-                return Calc.run(firstExp) + Calc.run(secondExp);
-            }else if(operator.equals("*")) {
-                return Calc.run(firstExp) * Calc.run(secondExp);
-            }
-        }
-        else if (needToCompound) {
+            // 찾은 구분자를 저장.
+            char operator = exp.charAt(splitPointIndex);
+
+            exp = Calc.run(firstExp) + " " + operator + " " + Calc.run(secondExp);
+
+            return Calc.run(exp);
+
+        } else if (needToCompound) {
             bits = exp.split(" \\+ ");
 
             // new... 잘 알아봅시다. // "20 + 10 + 5 * 2 == 40"
@@ -94,14 +82,13 @@ public class Calc {
             bits = exp.split(" \\* ");
         }
 
+//        System.out.println("BITS : " + Arrays.toString(bits));
 
         // 파싱되고 남은 숫자들을 저장할 리스트 numbers
         List<Integer> numbers = new ArrayList<>();
 
-        // System.out.println("bits: " + Arrays.toString(bits));
-
         for (int i = 0; i < bits.length; i++) {
-            System.out.println("bits[" + i + "] : " + bits[i]);
+//            System.out.println("bits[" + i + "] : " + bits[i]);
             numbers.add(Integer.parseInt(bits[i]));
         }
 
@@ -117,6 +104,35 @@ public class Calc {
         return answer;
         // throw new RuntimeException("해석 불가 : 올바른 계산식이 아닙니다.");
 
+    }
+
+    private static int findSplitPointIndex(String exp) {
+        // 현재 계산식에서는 덧셈과 곱셈만 처리하면 되기 때문에 구분자로 찾을 문자도 +와 *만 처리하면 되기 때문에 return 하는 경우가 2가지밖에 없다.
+        int index = findSplitPointIndexBy(exp, '+');
+
+        if (index >= 0) return index;
+
+        return findSplitPointIndexBy(exp, '*');
+    }
+
+    private static int findSplitPointIndexBy(String exp, char findChar) {
+        int brackesCount = 0; // 괄호 수를 세고 여는 괄호에 맞춰 닫는 괄호가 모두 닫혔을 때를 세기 위한 Count.
+
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i); // 지금 검사하고 있는 문자 c
+
+            if (c == '(') {
+                brackesCount++;
+            } else if (c == ')') {
+                brackesCount--;
+            } else if (c == findChar) {
+                // 여는 괄호와 닫는 괄호가 쌍을 다 이루지 않았을 때
+                // if (brackesCount != 0) // i가 괄호 안 문자열 안에 있는 곱셈 또는 덧셈을 가리키게 된다. 이 연산자를 기준으로 나누면 안된다.
+                // 여는 괄호와 닫는 괄호가 쌍을 다 이뤘을 때
+                if (brackesCount == 0) return i; // 괄호의 바깥에 있는 연산자. 이 연산자를 기준으로 나누기 위해 return을 해준다.
+            }
+        }
+        return -1;
     }
 
     // 바깥 괄호 삭제 메소드
